@@ -1,89 +1,73 @@
-# Final_Project
+Employee Turnover Prediction — Project Overview
+================================================
 
-0. PROJECT INTRODUCTION
-Employee attrition vs employee turnover:
-While the two terms gets intertwined sometimes, undrestanding their difference is key in human resources. Similalry, confusing them is too detrimental.
+1. Introduction
+--------------
+This project applies machine learning to predict employee turnover — the likelihood that an individual employee will voluntarily leave an organization within a given period.
+Unlike attrition, which typically refers to involuntary or unplanned departures that are not immediately backfilled, turnover reflects voluntary resignation and carries significant organizational cost, such as:
+   - increased recruitment and onboarding expenses
+   - loss of institutional knowledge, 
+   - disruption to team continuity.
 
-Simply put, employee turnover refers to a number of employees who left the company over a period of time. 
-employee attrition refers to a number of employees who leave a company unprecedently or due to uncontrolable reasons
+By analyzing key HR factors, this project identifies patterns in employee behavior and produces a classification model capable of flagging employees at elevated risk of departure — enabling proactive retention strategies.
 
-One of the impact employee attrition causes over employee turnover are the following: 
+2. Dataset and Feature Overview
+------------------------------
+Source files:
+   hr_analytics.csv — Raw HR dataset
+   data.csv — Processed and encoded version used for modeling
 
-- employees leaves role unfilled long-term
-- sometimes roles can be eliminated 
+Key predictive features span four domains:
+   - Role and Tenure
+   - Position, Years at Company, Years Since Last Promotion
+   - Education level, Total Working Years
+   - Relationship Satisfaction, Work-Life Balance, Number of Companies Worked
+   - Marital Status, Age, Monthly Income, Monthly Rate, Stock Option Level
 
-Business invest a lot of resources to understand the reasons behind employees attrition, with an understanding there has to be some factors at play. There surely are. And the assumption is that if those factors would be delt with adequately, employee attrition would be reduced considerably. This project assumes that role. By gathering data that satisfy the factors that contribute the most to employee turnover, I use machine learning to build a model that detect those models and predict whether an employee will stay with a company over a periond of time or not.
 
-Dataset: 
+3. Project Structure
+--------------------
 
-Pre-assumptions:
-   * Factors at play:
-     
-  b. Position
-     - JobRole
-     - JobLevel
-     - YearsAtCompany'
-     - YearsInCurrentRole
-     - YearsWithCurrManager
-     - YearsSinceLastPromotion
-       
-  c. Education and experience factors 
-     - Education
-     - TotalWorkingYears':
-     
-  d. Job satisfaction
-     - RelationshipSatisfaction
-     - WorkLifeBalance
-     - EnvironmentSatisfaction
-     - DistanceFromHome
-     - NumCompaniesWorked
-     
-  d. demographics
-     - MaritalStatus
-     - Gender
-     - Age
+The project is organized as follows:
 
-  f. Financial security: 
-     - MonthlyIncome'
-     - MonthlyRate
-     - StockOptionLevel
+   - data/ — Raw and processed datasets
+   - notebooks/ — Six Jupyter notebooks covering EDA, preprocessing, modeling, evaluation, and interpretation
+   - functions (.py files)— Modular utility functions, separated for readability and reuse
+   - requirements/ — Serialized best model (.joblib format), ready for deployment in Streamlit
+   - model_implementation notebook — Dedicated to loading and testing the saved model on unseen data
 
-Factors applicability: The above factors can be applied to both new and existing company employees and potential employees as long as there is historical records of that employee or potential employee. 
-     
-Attrition time assumed: Due to the highlighted differences with attrition and retention mentioned above, there is no time assigned to the attrition analysis in this project. It rather flags a certain individual as more or less likely to leave the company and then further actions can be taken. 
-     
-4. PROJECT ACCESS
-This project is made of the following components:
-- data related files are found in the data folder
-- notebooks includes all jupyter notebooks used to handle the data, build the model, and carry out evaluation and analysis
-    - the individual notebooks are numbered from 1 to 6 in their order
-    - functions separation: to come up with a more organized code, the functions used in cleaning are separated in file
-    - After model evaluation and hyper-parameter tuning, the best model is also dumped in requirements folder
- 
-- 4.model_eval_and interpretation notebook is dedicated to testing the saved model on a new dataset. 
-- 
-5. PREPROCESSING
-The sourced data needs to be encoded in order to be standardized and used in the model. However, other cleanings are not needed since it is already cleaned. Further observations show that there is a huge class imbalance where a big number of employees ended up staying with the company, and a small number left.  Instead of dealing with this imbalance directly, I rather left it as it is since it represent the nature of the data distribution. I will resolt to using a model that handle such an imbalance.
+4. Preprocessing
+----------------
 
-6. EDA
+The source data required encoding of categorical variables for model compatibility, but no extensive cleaning was necessary as the dataset arrived in good condition. A notable characteristic of the data is significant class imbalance: the majority of employees remained with the company, while a smaller proportion left. Rather than artificially correcting this imbalance through oversampling or undersampling techniques, the natural distribution was preserved — as it accurately reflects real-world conditions — and addressed through appropriate model selection instead.
 
-From understanding the data distribution through numbers, I used different visualization to see how this is. I also tried to quantify the class imbalances which gives me an idea of how I should prepare for selecting the right model and how I should interpret it well.
+5. Exploratory Data Analysis
+----------------------------
 
-From the findings, we can see that there are more employees who stayed with the company than those who left
+EDA combined summary statistics with visualizations to understand feature distributions and the degree of class imbalance. Findings confirmed that retained employees substantially outnumber those who departed, reinforcing the decision to select a model well-suited to imbalanced classification tasks.
 
-8. MODEL-SELECTION
+6. Model Selection and Evaluation
+---------------------------------
 
-- Random Forest classification: Will handle imbalances in left employees without the need to apply other techniques such as oversampling and undersampling
-- After splitting the data in train and test splits, we will use RandomClassifier algolrithm. Before using it though, it will be necessary to select the most suitable parameters to so that we come up with the best posible model parameters by using GridSearchCV. Then next, we fit the model to the best performing parameters to come up with the best possible results.
+Algorithm: Random Forest Classifier
+Random Forest was selected for its robustness to class imbalance and its ability to model non-linear relationships without requiring resampling techniques. Hyperparameter tuning was performed using GridSearchCV to identify the optimal model configuration prior to final fitting.
+Performance:
 
-- Model evaluation: We evaluate the performance of our model with its accuracy and looking at the classification report.
-  - Accuracy: the accuracy of the hyper-tuned model is 0.85. it is a good score if we combine this with other metrics such as precison and recall 
-  - Classification report: a detailed classfication report is in file 3. model_selection found in the notebooks folder
+Accuracy: 0.85 — a strong result, particularly when considered alongside precision and recall metrics
+Classification Report: Full per-class metrics are available in notebooks/3_model_selection
 
-9. Interpretation: There is always the current model performance interpretation in the file 3. model_selectin found in the notebooks folder
 
-10. Model Storage: The best model is sotred in requirements with a joblib extention. It can be easily used with any kind of data. 
+7. Model Interpretation
+------------------------
 
-# References 
+Detailed performance interpretation, including feature importance analysis and per-class evaluation, is documented in notebooks/3_model_selection.
+
+8. Model Storage
+----------------
+
+The best-performing model is serialized using joblib and stored in the requirements/ directory. It can be loaded and applied directly to any compatible dataset for inference.
+
+9. References 
+-------------
 S. Flowers (1974), Why Employees Stay. Retrieved from: https://hbr.org/1973/07/why-employees-stay
 Dataset: Link: https://www.kaggle.com/datasets/thedevastator/employee-attrition-and-factors
